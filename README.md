@@ -36,6 +36,12 @@ npm run dev
 
 Open [Reel2Build](http://127.0.0.1:5173/). FastAPI exposes [interactive API docs](http://127.0.0.1:8000/docs).
 
+## Deploy on Render
+
+Create a Docker web service from the `main` branch with the repository root as its build context. The Dockerfile builds React and serves it from FastAPI on the same URL. Use `/health` for the health check.
+
+Set `APP_PASSWORD` to a strong demo password and `GROQ_API_KEY` to your Groq key under the service's **Environment** settings. Open the service URL and sign in as `demo` with the password you set. The free service sleeps when idle and loses local uploads and cached results when it restarts.
+
 ## How it works
 
 1. **Import video** downloads a public Instagram Reel with yt-dlp or accepts an uploaded MP4. The app accepts videos up to 50 MB and three minutes. MP4 upload is the fallback when Instagram blocks downloads.
