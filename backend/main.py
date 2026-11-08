@@ -1,11 +1,8 @@
-from base64 import b64encode
-import os
 from pathlib import Path
-from secrets import compare_digest
 from uuid import UUID
 
-from fastapi import FastAPI, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -13,29 +10,6 @@ from analysis import AnalysisResponse, BuildRoadmap, RoadmapRequest, analyze_vid
 from media import DATA_DIR, MAX_BYTES, MediaError, download_reel, inspect_video, new_video_path, remove_video
 
 app = FastAPI(title="Reel2Build API")
-app_password = os.getenv("APP_PASSWORD")
-on_render = os.getenv("RENDER") == "true"
-
-
-if app_password or on_render:
-    expected_credentials = b64encode(f"demo:{app_password}".encode("utf-8"))
-
-    @app.middleware("http")
-    async def protect_demo(request: Request, call_next):
-        if request.method == "GET" and request.url.path == "/health":
-            return await call_next(request)
-        if not app_password:
-            return JSONResponse({"detail": "Set APP_PASSWORD on Render to enable Reel2Build."}, 503)
-
-        scheme, _, credentials = request.headers.get("authorization", "").partition(" ")
-        if scheme.lower() != "basic" or not compare_digest(credentials.encode(), expected_credentials):
-            return JSONResponse(
-                {"detail": "Sign in to Reel2Build."}, 401,
-                headers={"WWW-Authenticate": 'Basic realm="Reel2Build", charset="UTF-8"'},
-            )
-        if request.method == "POST" and request.headers.get("sec-fetch-site") in {"cross-site", "same-site"}:
-            return JSONResponse({"detail": "Open Reel2Build directly to use this action."}, 403)
-        return await call_next(request)
 
 
 class ReelRequest(BaseModel):

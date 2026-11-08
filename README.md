@@ -2,6 +2,10 @@
 
 Reel2Build turns a project demo in an Instagram Reel or MP4 into a short analysis and a step-by-step build roadmap. It separates what the video shows from details the viewer needs to confirm.
 
+[**Try Reel2Build live**](https://reel2build.onrender.com)
+
+Paste a public Instagram Reel link or upload an MP4, then select **Analyze video**. If Reel2Build detects a project demo, select **Generate build roadmap** to get step-by-step instructions. The first visit after inactivity can take about a minute while the free Render service wakes up.
+
 ## Run locally
 
 The project was tested with Python 3.13 and Node.js 22. The following commands use PowerShell.
@@ -40,7 +44,7 @@ Open [Reel2Build](http://127.0.0.1:5173/). FastAPI exposes [interactive API docs
 
 Create a Docker web service from the `main` branch with the repository root as its build context. The Dockerfile builds React and serves it from FastAPI on the same URL. Use `/health` for the health check.
 
-Set `APP_PASSWORD` to a strong demo password and `GROQ_API_KEY` to your Groq key under the service's **Environment** settings. Open the service URL and sign in as `demo` with the password you set. The free service sleeps when idle and loses local uploads and cached results when it restarts.
+Set `GROQ_API_KEY` to your Groq key under the service's **Environment** settings. On the free plan, local uploads and cached results are cleared when the service restarts.
 
 ## How it works
 
